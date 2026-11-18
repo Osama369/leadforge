@@ -1,0 +1,77 @@
+# LeadForge qualification rules.
+# Each service starts at `base`, then every matching signal adds `points`
+# (negative = the business already has it / is a poor fit). Final score clamped 0-100.
+# Tune these numbers to match what actually closes for your agency.
+# Reason text supports: {review_count} {rating} {pagespeed} {copyright_year} {cms} {chat_widget} {load_s}
+#                       {serp_query} {serp_rank} {serp_leader}
+
+tiers:
+  hot: 70
+  warm: 40
+
+# Leads with no email AND no phone are capped at this score (can't contact them).
+no_contact_cap: 30
+
+services:
+  seo:
+    base: 15
+    signals:
+      not_ranking:           {points: 20, reason: "Not on Google page 1 for '{serp_query}' ({serp_leader} ranks above them)"}
+      page1_not_top3:        {points: 10, reason: "Only #{serp_rank} on Google for '{serp_query}'; the top 3 get most clicks"}
+      ranks_top3:            {points: -20, reason: "Already top 3 on Google for '{serp_query}' (pitch maintenance only)"}
+      no_website:            {points: 25, reason: "No website, so they're invisible in organic search"}
+      no_local_schema:       {points: 10, reason: "No LocalBusiness schema markup"}
+      missing_meta:          {points: 10, reason: "Missing meta description"}
+      weak_title:            {points: 8,  reason: "Weak/missing homepage title"}
+      no_h1:                 {points: 7,  reason: "Homepage has no H1 heading"}
+      thin_content:          {points: 8,  reason: "Thin homepage content"}
+      poor_pagespeed:        {points: 12, reason: "Mobile PageSpeed only {pagespeed}/100"}
+      slow_load:             {points: 6,  reason: "Slow to load ({load_s}s)"}
+      no_https:              {points: 8,  reason: "No HTTPS (Google flags as 'Not secure')"}
+      low_reviews:           {points: 10, reason: "Only {review_count} Google reviews"}
+      good_rating:           {points: 5,  reason: "Good rating ({rating}★) to build on"}
+      no_analytics:          {points: 5,  reason: "No Google Analytics, so they're flying blind"}
+
+  ads:
+    base: 15
+    signals:
+      no_google_ads_tag:     {points: 20, reason: "No Google Ads tag, not running search ads"}
+      no_meta_pixel:         {points: 15, reason: "No Meta (Facebook) pixel, so no retargeting"}
+      has_analytics:         {points: 8,  reason: "Has analytics, so they're data-aware and ready for ads"}
+      many_reviews:          {points: 10, reason: "{review_count} reviews, an established business with budget"}
+      good_rating:           {points: 8,  reason: "{rating}★ rating converts well in ads"}
+      high_value_niche:      {points: 10, reason: "High-ticket niche, where ads pay off fast"}
+      has_google_ads_tag:    {points: -20, reason: "Already runs Google Ads (pitch optimisation instead)"}
+      no_website:            {points: -10, reason: "No website for ads to land on"}
+
+  web:
+    base: 15
+    signals:
+      no_website:            {points: 60, reason: "Has no website at all"}
+      website_unknown:       {points: 15, reason: "No website listed in directory (check before pitching)"}
+      site_broken:           {points: 45, reason: "Website is down or broken"}
+      builder_subdomain:     {points: 30, reason: "Uses a free builder subdomain, not a real domain"}
+      not_mobile:            {points: 25, reason: "Not mobile-friendly"}
+      outdated_site:         {points: 20, reason: "Site looks outdated (© {copyright_year})"}
+      no_https:              {points: 12, reason: "No SSL certificate"}
+      poor_pagespeed:        {points: 12, reason: "Slow mobile site ({pagespeed}/100)"}
+      diy_builder:           {points: 10, reason: "DIY builder site ({cms})"}
+      thin_content:          {points: 6,  reason: "Very little content on homepage"}
+      many_reviews:          {points: 6,  reason: "Busy business ({review_count} reviews) with an underperforming site"}
+
+  chatbot:
+    base: 15
+    signals:
+      no_chat_widget:        {points: 25, reason: "No live chat or chatbot on website"}
+      appointment_niche:     {points: 15, reason: "Appointment-based business, so a 24/7 booking bot fits"}
+      many_reviews:          {points: 15, reason: "{review_count} reviews means high inquiry volume"}
+      no_booking:            {points: 10, reason: "No online booking system"}
+      whatsapp_only:         {points: 8,  reason: "Handles leads via WhatsApp manually, so it's ready to automate"}
+      has_chat_widget:       {points: -35, reason: "Already has {chat_widget} (pitch an AI upgrade)"}
+      no_website:            {points: -10, reason: "No website (WhatsApp bot only)"}
+
+# Niches considered high-ticket (ads) / appointment-based (chatbot). Substring match on niche/category.
+high_value_niches: [lawyer, attorney, dentist, dental, cosmetic, plastic surg, med spa, roof, hvac, plumb,
+                    real estate, solar, immigration, clinic, orthodont, injury, contractor, remodel, car dealer]
+appointment_niches: [dentist, dental, clinic, doctor, physio, chiropract, salon, spa, barber, lawyer, attorney,
+                     real estate, gym, fitness, tutor, coaching, institute, vet, therapist, consultant, hotel]

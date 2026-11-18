@@ -1,0 +1,5 @@
+# sample list for `audit` (no API keys needed)
+https://www.wordpress.org
+https://www.python.org
+https://example.com
+https://www.squarespace.com

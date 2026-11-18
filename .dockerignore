@@ -1,0 +1,14 @@
+.venv
+.env
+.env.*
+data
+output
+__pycache__
+**/__pycache__
+*.pyc
+service-account*.json
+tests
+docs
+.git
+.claude
+dist

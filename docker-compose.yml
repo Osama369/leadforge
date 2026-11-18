@@ -1,0 +1,34 @@
+# LeadForge production stack: app + Caddy (automatic HTTPS from Let's Encrypt).
+#   1. point your domain's DNS (A record) to the server IP
+#   2. echo "DOMAIN=leads.yourdomain.com" > .env.deploy
+#   3. docker compose --env-file .env.deploy up -d --build
+#   4. docker compose exec app python -m leadforge create-user --email you@agency.com --role admin
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data            # database, API keys (.env), backups, Google credentials
+    expose:
+      - "8000"                      # only reachable through Caddy, never directly from the internet
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "5" }
+
+  caddy:
+    image: caddy:2.8
+    restart: unless-stopped
+    depends_on: [app]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env.deploy}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

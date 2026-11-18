@@ -1,0 +1,12 @@
+.venv/
+.env
+data/
+output/
+__pycache__/
+service-account*.json
+.env.deploy
+dist/
+.claude/
+*.db
+*.db-wal
+*.db-shm
