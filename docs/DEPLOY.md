@@ -1,15 +1,17 @@
 # Deploying LeadForge (VPS + Docker)
 
-## Quick path (leadforge.aspiredigital.pk)
+## Quick path (leadforge.aspiredigital.pk, from GitHub)
 1. DNS: A record `leadforge` -> server IP (at the aspiredigital.pk DNS provider).
-2. On your PC: `scp D:/leadforge/dist/leadforge-deploy.tar.gz root@SERVER_IP:/root/`
-3. On the server:
+2. On the server:
    ```bash
-   mkdir -p /opt/leadforge && tar -xzf /root/leadforge-deploy.tar.gz -C /opt/leadforge
+   apt update && apt -y install git
+   git clone https://github.com/Osama369/leadforge.git /opt/leadforge
    cd /opt/leadforge && sh deploy/install.sh leadforge.aspiredigital.pk
    docker compose exec app python -m leadforge create-user --email you@aspiredigital.pk --name "Your Name" --role admin
    ```
-4. Open https://leadforge.aspiredigital.pk -> Settings -> paste API keys.
+3. Open https://leadforge.aspiredigital.pk -> Settings -> paste API keys.
+
+Update later: `cd /opt/leadforge && git pull && docker compose --env-file .env.deploy up -d --build`
 
 The detailed manual steps follow.
 
