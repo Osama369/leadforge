@@ -10,3 +10,6 @@ dist/
 *.db
 *.db-wal
 *.db-shm
+admin-credentials*.json
+*credentials*.json
+deploy/create-admin.ps1
