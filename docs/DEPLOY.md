@@ -13,6 +13,15 @@
 
 Update later: `cd /opt/leadforge && git pull && docker compose --env-file .env.deploy up -d --build`
 
+### Live server (142.93.3.14) - existing nginx, no Caddy
+This server already runs nginx for erp/bot/sarabeauty, so LeadForge uses `docker-compose.nginx.yml`
+(app on 127.0.0.1:8010) + `deploy/nginx-leadforge.conf` + certbot webroot (`/var/lib/leadforge/acme`).
+Release update:
+```bash
+cd /opt/leadforge && git fetch --tags && git checkout vX.Y.Z
+docker compose -f docker-compose.nginx.yml up -d --build
+```
+
 The detailed manual steps follow.
 
 One server, one workspace for your team. HTTPS is automatic (Caddy + Let's Encrypt).
